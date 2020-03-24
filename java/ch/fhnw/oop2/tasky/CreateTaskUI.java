@@ -1,5 +1,6 @@
 package ch.fhnw.oop2.tasky;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class CreateTaskUI extends VBox {
@@ -32,12 +34,12 @@ public class CreateTaskUI extends VBox {
 		buttons = new HBox();
 		buttonSave = new Button("Save");
 		buttonDelete = new Button("Delete");
-		creator = getCreator();
+		creator = new VBox();
 
 	}
 
 	private void layoutControls() {
-		setPadding(new Insets(10));
+		setPadding(new Insets(50));
 		setSpacing(10);
 		
 		buttons.setSpacing(10);
@@ -45,27 +47,32 @@ public class CreateTaskUI extends VBox {
 
 		creator.setPrefWidth(Starter.WIDTH / 2);
 		creator.setSpacing(10);
+		creator.getChildren().addAll(getCreator());
 
 		getChildren().addAll(creator, buttons);
 	}
 
-	private VBox getCreator() {
-		VBox listVBox = new VBox();
+	private Collection<? extends Node> getCreator() {
+//		VBox listVBox = new VBox();
 		Map<String, Node> items = new LinkedHashMap<>();
-		items.put("ID", new TextField());
+		TextField f = new TextField();
+		f.setMaxWidth(Double.MAX_VALUE);
+		items.put("ID", f);
 		items.put("Title", new TextField());
 		items.put("Desc", new TextArea());
 		items.put("Date", new DatePicker());
 		items.put("State", new ComboBox<>(FXCollections.observableArrayList("Todo", "Doing", "Done")));
-		listVBox.getChildren().addAll(
-				items.keySet().stream().map(key -> createLine(key, items.get(key))).collect(Collectors.toList()));
-		return listVBox;
+		return
+				items.keySet().stream().map(key -> createLine(key, items.get(key))).collect(Collectors.toList());
+//		items.values().stream().filter(node->node instanceof TextField).forEach(field->((TextField) field).setWidth(Double.MAX_VALUE));
+//		return listVBox;
 	}
 
 	private HBox createLine(String desc, Node node) {
 		HBox hbox = new HBox();
 		Label label = new Label(desc);
 		label.setPrefWidth(40);
+		
 		hbox.getChildren().addAll(label, node);
 		return hbox;
 	}
