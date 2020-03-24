@@ -1,7 +1,6 @@
 package ch.fhnw.oop2.tasky;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ public class CreateTaskUI extends VBox {
 	private Button buttonDelete;
 	private HBox buttons;
 	private VBox creator;
-
+private final static int WIDTH =Starter.WIDTH / 3;
 	public CreateTaskUI() {
 		initializeControls();
 		layoutControls();
@@ -39,41 +38,37 @@ public class CreateTaskUI extends VBox {
 	}
 
 	private void layoutControls() {
-		setPadding(new Insets(50));
+		setPadding(new Insets(30));
 		setSpacing(10);
 		
 		buttons.setSpacing(10);
 		buttons.getChildren().addAll(buttonSave, buttonDelete);
 
-		creator.setPrefWidth(Starter.WIDTH / 2);
+		creator.setPrefWidth(WIDTH);
 		creator.setSpacing(10);
-		creator.getChildren().addAll(getCreator());
 
 		getChildren().addAll(creator, buttons);
+		creator.getChildren().addAll(getCreator());
 	}
 
-	private Collection<? extends Node> getCreator() {
+	private Collection<? extends Region> getCreator() {
 //		VBox listVBox = new VBox();
-		Map<String, Node> items = new LinkedHashMap<>();
-		TextField f = new TextField();
-		f.setMaxWidth(Double.MAX_VALUE);
-		items.put("ID", f);
+		Map<String, Region> items = new LinkedHashMap<>();
+		items.put("ID", new TextField());
 		items.put("Title", new TextField());
 		items.put("Desc", new TextArea());
 		items.put("Date", new DatePicker());
 		items.put("State", new ComboBox<>(FXCollections.observableArrayList("Todo", "Doing", "Done")));
 		return
 				items.keySet().stream().map(key -> createLine(key, items.get(key))).collect(Collectors.toList());
-//		items.values().stream().filter(node->node instanceof TextField).forEach(field->((TextField) field).setWidth(Double.MAX_VALUE));
-//		return listVBox;
 	}
 
-	private HBox createLine(String desc, Node node) {
+	private HBox createLine(String desc, Region region) {
 		HBox hbox = new HBox();
-		Label label = new Label(desc);
-		label.setPrefWidth(40);
-		
-		hbox.getChildren().addAll(label, node);
+		Label label = new Label(desc+":");
+		label.setMinWidth(40);
+		region.setPrefWidth(WIDTH);
+		hbox.getChildren().addAll(label, region);
 		return hbox;
 	}
 
